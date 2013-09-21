@@ -1,0 +1,4 @@
+Avoid death
+- Condition: If a possible move will immediately avoid death next turn
+- Action: Do that move
+
