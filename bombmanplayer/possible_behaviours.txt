@@ -3,3 +3,9 @@ Avoid death
 - Action: Do that move
 
 possibly we will need to get some food.
+
+Avoid danger tiles on a time-to-detonate weighted basis
+
+Possible path searching goals:
+	- Avoid danger
+	- Find optimum bomb placement
