@@ -6,6 +6,7 @@ from Enums import *
 from Direction import *
 
 from Behaviours import *
+from DangerMap import *
 
 """The Decider chooses which behaviour to do next"""		
 class Decider(object):
@@ -17,11 +18,15 @@ class Decider(object):
 		self.bomb_a_block = Bomb_A_Block_Behaviour(0.75)
 		self.random_move = Random_Move_Behaviour(0.5)
 		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move]
+		self.map_converter = DangerMap()
 		
 	def decide(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
 		
 		"""By default, we will do nothing"""
 		self.action_to_take_next = Do_Nothing_Behaviour()
+		
+		"""Set up the DangerMap!"""
+		danger_map = self.map_converter.convert_to_danger_map(map_list, bombs)
 
 		print("******Decision Time!******")
 		for behaviour in self.behaviours:
