@@ -13,23 +13,23 @@ class Decider(object):
 	def __init__(self):
 		
 		print("******Setting Up Behaviours and Weighting Them!******")
-		self.avoid_death = Avoid_Death_Behaviour(0.1)
-		self.drop_bomb = Drop_Bomb_Behaviour(0.5)
-		self.random_move = Random_Move_Behaviour(1.0)
-		self.behaviours = [self.avoid_death, self.drop_bomb, self.random_move]
+		self.avoid_death = Avoid_Death_Behaviour(1.0)
+		self.bomb_a_block = Bomb_A_Block_Behaviour(0.75)
+		self.random_move = Random_Move_Behaviour(0.5)
+		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move]
 		
-	def decide(self):
+	def decide(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
 		
 		"""By default, we will do nothing"""
 		self.action_to_take_next = Do_Nothing_Behaviour()
 
 		print("******Decision Time!******")
 		for behaviour in self.behaviours:
-			if behaviour.check_conditions() == True and (behaviour.priority > self.action_to_take_next.priority):
+			if behaviour.check_conditions(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number) == True and (behaviour.priority > self.action_to_take_next.priority):
 				self.action_to_take_next = behaviour
 
 		print("******Action Time!******")
-		return self.action_to_take_next.take_action()
+		return self.action_to_take_next.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number)
 
 
 class PlayerAI():
@@ -42,4 +42,4 @@ class PlayerAI():
 		self.blocks = blocks_list[:]
 
 	def get_move(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
-		return self.decider.decide()		
+		return self.decider.decide(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number)		
