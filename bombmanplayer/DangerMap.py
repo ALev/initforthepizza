@@ -30,9 +30,6 @@ class DangerMap:
 			square_clusters.append(new_square_clus)
 
 		for bomb_cluster, square_cluster in zip(bomb_clusters, square_clusters):
-			print bomb_cluster			
-			print "times:" 
-			print [bombs[bomb_xy]['time_left'] for bomb_xy in bomb_cluster]
 			time_to_explode = min([bombs[bomb_xy]['time_left'] for bomb_xy in bomb_cluster])
 			for square in square_cluster:
 				danger_map[square[0]][square[1]] = self.danger_function(time_to_explode)
@@ -46,14 +43,11 @@ class DangerMap:
 			
 	def query_bomb_cluster(self,map_list, bombs, bomb_cluster, square_cluster, bomb_xy, x_max, y_max):
 		bomb_cluster.append(bomb_xy)
-		print "initial bomb cluster"		
-		print bomb_cluster
 		square_cluster.append(bomb_xy)
 
 		bomb_range = bombs[bomb_xy]['range']
 		
 		for move in Directions.values():
-			print "checking move: {0}".format(move.name)
 			if move.name == 'still': pass
 			for range_inc in range(1,bomb_range+1):
 				x = min(max(bomb_xy[0] + move.dx * range_inc,0),x_max)
