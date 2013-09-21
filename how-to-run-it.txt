@@ -1,0 +1,5 @@
+First:
+./runserver.sh
+
+Second:
+python runclient.py localhost 19999 player
