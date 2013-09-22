@@ -32,10 +32,10 @@ class PathPlanner:
 	def locate_accessible_objects(self, map_list, accessibility, curr_pos, goal):
 		options = {}
 		# if we're searching for a walkable square, just iterate over accessible squares		
-			for square in accessibility:
-				if ((goal == 'FIREUP' or 'BOMBUP' or 'POWERUP') and (map_list[square[0]][square[1]] == goal)) or
-				   ((goal == 'BLOCK') and (check_adjacency(map_list, square, goal)):
-						options[manhattan_distance(curr_pos, square)] = square
+		for square in accessibility:
+			if ((goal == 'FIREUP' or 'BOMBUP' or 'POWERUP') and (map_list[square[0]][square[1]] == goal)) or \
+			   ((goal == 'BLOCK') and (check_adjacency(map_list, square, goal))):
+					options[manhattan_distance(curr_pos, square)] = square
 					
 		return options
 
