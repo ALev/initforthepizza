@@ -78,8 +78,8 @@ class PathPlanner:
 		
 			for move in Directions.values():
 				if move.name == 'still': pass
-				x = min(max(current[0] + move.dx,0),17)
-				y = min(max(current[1] + move.dy,0),17)
+				x = min(max(current[0] + move.dx,0),MAP_SIZE)
+				y = min(max(current[1] + move.dy,0),MAP_SIZE)
 				neighbor = (x,y)
 			
 				if neighbor in accessibility:

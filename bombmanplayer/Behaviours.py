@@ -149,19 +149,35 @@ class Seek_Block_Behaviour(object):
 	
 	def __init__(self, priority):
 		self.priority = priority
-		pass
+		self.path_planner = PathPlanner()
+		self.options = self.path_planner.locate_accessible_objects(map_list, accessible_squares, bombers[player_index]['position'], 'BLOCK')
 		
 	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 
-		if True:
-			print("Conditions Met: Seek Block")
-			return True
-		else:
-			return False
+		if len(self.options)==0: return False
+
+		print("Conditions Met: Seek Block")
+		return True
 		
 	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		
-		print("Action: Seek Block")
+		if len(options)>0:
+			goal = options[min(options)]
+			path = self.path_planner.A_star(accessibile_squares, player_index, goal)
+			
+			if len(path) < 2:
+				print("Error with the path planner for block search.")
+				return
+
+			next_action = path[1] 
+			
+			for move in Directions.values():
+				if move.name == 'still': pass
+				x = min(max(player_index[0] + move.dx,0),MAP_SIZE)
+				y = min(max(player_index[1] + move.dy,0),MAP_SIZE)
+				if (x,y) == next_action:
+					print("Action: Seek Block")
+					return move.action
 
 class Random_Move_Behaviour(object):
 	
