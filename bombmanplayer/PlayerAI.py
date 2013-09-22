@@ -16,11 +16,12 @@ class Decider(object):
 		
 		print("******Setting Up Behaviours and Weighting Them!******")
 		self.avoid_death = Avoid_Death_Behaviour(1.0)
-		self.bomb_a_block = Bomb_A_Block_Behaviour(0.75)
-		self.open_space_bombing = Open_Space_Bombing_Behaviour(0.6)
-		self.seek_block = Seek_Block_Behaviour(0.55)
+		self.bomb_a_block = Bomb_A_Block_Behaviour(0.9)
+		self.open_space_bombing = Open_Space_Bombing_Behaviour(0.8)
+		self.seek_powerup = Seek_Powerup_Behaviour(0.7)
+		self.seek_block = Seek_Block_Behaviour(0.6)
 		self.random_move = Random_Move_Behaviour(0.5)
-		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move, self.open_space_bombing, self.seek_block]
+		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move, self.open_space_bombing, self.seek_block, self.seek_powerup]
 		self.map_converter = DangerMap()
 		self.path_planner = PathPlanner()
 		

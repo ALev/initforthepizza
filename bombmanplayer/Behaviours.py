@@ -145,6 +145,43 @@ class Open_Space_Bombing_Behaviour(object):
 			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
 				
 		
+class Seek_Powerup_Behaviour(object):
+	
+	def __init__(self, priority):
+		self.priority = priority
+		self.path_planner = PathPlanner()
+		
+		
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+
+		self.options = self.path_planner.locate_accessible_objects(map_list, accessible_squares, bombers[player_index]['position'], 'POWERUP')
+
+		if len(self.options)==0: return False
+
+		print("Conditions Met: Seek Powerup")
+		return True
+		
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+		
+		if len(self.options)>0:
+			goal = self.options[min(self.options)]
+			my_pos = bombers[player_index]['position']
+			path = self.path_planner.A_star(accessible_squares, my_pos, goal)
+			
+			if len(path) < 2:
+				print("Error with the path planner for powerup search.")
+				return
+
+			next_action = path[1] 
+			
+			for move in Directions.values():
+				if move.name == 'still': pass
+				x = min(max(my_pos[0] + move.dx,0),MAP_SIZE)
+				y = min(max(my_pos[1] + move.dy,0),MAP_SIZE)
+				if (x,y) == next_action:
+					print("Action: Seek Powerup")
+					return move.action
+					
 class Seek_Block_Behaviour(object):
 	
 	def __init__(self, priority):
