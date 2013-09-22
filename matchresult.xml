@@ -3,11 +3,11 @@
   <match>
     <score>
       <playername>player</playername>
-      <value>1242</value>
+      <value>0</value>
     </score>
     <score>
       <playername>B</playername>
-      <value>311</value>
+      <value>0</value>
     </score>
   </match>
 </matches>

@@ -145,6 +145,24 @@ class Open_Space_Bombing_Behaviour(object):
 			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
 				
 		
+class Seek_Block_Behaviour(object):
+	
+	def __init__(self, priority):
+		self.priority = priority
+		pass
+		
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+
+		if True:
+			print("Conditions Met: Seek Block")
+			return True
+		else:
+			return False
+		
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+		
+		print("Action: Seek Block")
+
 class Random_Move_Behaviour(object):
 	
 	def __init__(self, priority):
