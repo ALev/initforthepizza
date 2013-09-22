@@ -93,7 +93,7 @@ class Open_Space_Bombing_Behaviour(object):
 		adjacency_accumulator = 0
 		
 		for adjacent_square in Directions.values():
-			if (possible_move.name != 'still'):
+			if (adjacent_square.name != 'still'):
 				adjacent_x = our_position[0] + adjacent_square.dx
 				adjacent_y = our_position[1] + adjacent_square.dy
 
@@ -110,10 +110,21 @@ class Open_Space_Bombing_Behaviour(object):
 		
 		valid_moves = []
 		our_position = bombers[player_index]['position']
+
 		
 		for possible_move in Directions.values():
+			adjacency_accumulator = 0
 			if (possible_move.name != 'still'):
-				valid_moves.append(possible_move)
+				possible_x = our_position[0] + possible_move.dx
+				possible_y = our_position[1] + possible_move.dy
+				
+				for adjacent_square in Directions.values():
+					adjacent_square_x = possible_x + adjacent_square.dx
+					adjacent_square_y = possible_y + adjacent_square.dy
+					if map_list[adjacent_square_x][adjacent_square_y] not in WALKABLE:
+						adjacency_accumulator += 1
+				if adjacency_accumulator < 3:	
+					valid_moves.append(possible_move)
 		
 		print("Action: Open Space Bombing")
 		if len(valid_moves) > 0:

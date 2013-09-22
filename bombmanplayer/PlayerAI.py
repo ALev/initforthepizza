@@ -17,8 +17,9 @@ class Decider(object):
 		print("******Setting Up Behaviours and Weighting Them!******")
 		self.avoid_death = Avoid_Death_Behaviour(1.0)
 		self.bomb_a_block = Bomb_A_Block_Behaviour(0.75)
+		self.open_space_bombing = Open_Space_Bombing_Behaviour(0.6)
 		self.random_move = Random_Move_Behaviour(0.5)
-		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move]
+		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move, self.open_space_bombing]
 		self.map_converter = DangerMap()
 		self.path_planner = PathPlanner()
 		
