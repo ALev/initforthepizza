@@ -70,7 +70,7 @@ class PathPlanner:
 		new_y = bombers[player_index]['position'][1] + new_move.dy
 		new_pos = (new_x, new_y)
 		bombers[player_index]['position'] = new_pos
-		print("Destination position {0}".format(bombers[player_index]['position'])
+		print("Destination position {0}".format(bombers[player_index]['position']))
 
 		map_converter = DangerMap()
 		new_danger_map = map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
