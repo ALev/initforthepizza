@@ -13,7 +13,7 @@ class PathPlanner:
 
 		accessible_squares = self.query_accessibility(map_list, [], my_pos)
 
-		print accessible_squares
+		#print accessible_squares
 
 		return accessible_squares 
 			
@@ -53,4 +53,6 @@ class PathPlanner:
 
 	def is_opponent_accessible(self, map_list, bombers):
 		accessible_squares = self.query_accessible_squares(map_list, bombers, bombers[0])
-
+		for square in accessible_squares:
+			if (square[0],square[1]) == bombers[1]['position']: return True
+		return False
