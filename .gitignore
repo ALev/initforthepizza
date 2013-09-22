@@ -10,3 +10,5 @@ logs/Human1.player.log
 *.pyc
 
 *.pyc
+
+matchresult.xml
