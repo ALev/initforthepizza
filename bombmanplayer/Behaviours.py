@@ -52,6 +52,7 @@ class Bomb_A_Block_Behaviour(object):
 			if (possible_move.name != 'still'):
 				possible_x = our_position[0] + possible_move.dx
 				possible_y = our_position[1] + possible_move.dy
+
 				if (map_list[possible_x][possible_y] == "BLOCK"):
 
 					for adjacency in Directions.values():
