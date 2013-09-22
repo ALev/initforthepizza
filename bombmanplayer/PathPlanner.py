@@ -47,6 +47,24 @@ class PathPlanner:
 
 		return False
 
+	def query_safe_bomb_drop(self, map_list, bombs, bombers, explosion_list, new_move, player_index):
+		# add bomb to current location		
+		new_bomb = {'owner': player_index, 'range': bombers[player_index]['range'], 'time_left':15}
+		bombs[bombers[player_index]['position']] = new_bomb
+		map_converter = DangerMap()
+		new_danger_map = map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
+	
+		# update player position to new spot
+		new_x = bombers[player_index]['position'][0] + new_move.dx
+		new_y = bombers[player_index]['position'][0] + new_move.dy
+		new_pos = (new_x, new_y)
+		bombers[player_index]['position'] = new_pos
+		new_accessibility = self.query_accessible_squares(map_list, bombers, player_index)
+
+		if self.query_accessible_safezone(map_list, new_accessibility, new_pos, new_danger_map): return True
+		return False
+		
+
 	def check_adjacency(self, map_list, from_xy, goal):
 		for move in Directions.values():
 			if move.name == 'still': pass
