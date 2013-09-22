@@ -52,7 +52,7 @@ class PathPlanner:
 		return (abs(start[0]-end[0])+abs(start[1]-end[1]))
 
 	def is_opponent_accessible(self, map_list, bombers):
-		accessible_squares = self.query_accessible_squares(map_list, bombers, bombers[0])
+		accessible_squares = self.query_accessible_squares(map_list, bombers, 0)
 		for square in accessible_squares:
 			if (square[0],square[1]) == bombers[1]['position']: return True
 		return False
