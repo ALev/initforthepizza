@@ -35,13 +35,13 @@ class Decider(object):
 
 		print("******Decision Time!******")
 		for behaviour in self.behaviours:
-			if behaviour.check_conditions(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map) == True and (behaviour.priority > self.action_to_take_next.priority):
+			if behaviour.check_conditions(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares) == True and (behaviour.priority > self.action_to_take_next.priority):
 				self.action_to_take_next = behaviour
 
 		print("******Action Time!******")
-		self.move = self.action_to_take_next.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map)
+		self.move = self.action_to_take_next.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares)
 		if self.move == None:
-			self.move = self.random_move.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map)
+			self.move = self.random_move.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares)
 		return self.move
 
 

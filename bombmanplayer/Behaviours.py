@@ -9,7 +9,7 @@ class Avoid_Death_Behaviour(object):
 	def __init__(self, priority):
 		self.priority = priority
 		
-	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		print("Check: Avoid Death")
 		
 		our_position = bombers[player_index]['position']
@@ -25,7 +25,7 @@ class Avoid_Death_Behaviour(object):
 				return True
 
 					
-	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		print("Action: Avoid Death")
 		
 		our_position = bombers[player_index]['position']
@@ -44,7 +44,7 @@ class Bomb_A_Block_Behaviour(object):
 	def __init__(self, priority):
 		self.priority = priority
 		
-	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		print("Check: Bomb A Block")
 
 		path_planner = PathPlanner()
@@ -57,7 +57,7 @@ class Bomb_A_Block_Behaviour(object):
 				return True
 		return False
 			
-	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		valid_moves = []
 		our_position = bombers[player_index]['position']
 		
@@ -79,7 +79,46 @@ class Bomb_A_Block_Behaviour(object):
 		print("Action: Bomb A Block")
 		if len(valid_moves) > 0:
 			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
+
+
+class Open_Space_Bombing_Behaviour(object):
+
+	def __init__(self, priority):
+		self.priority = priority
 		
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+		print("Check: Open Space Bombing")
+
+		our_position = bombers[player_index]['position']
+		adjacency_accumulator = 0
+		
+		for adjacent_square in Directions.values():
+			if (possible_move.name != 'still'):
+				adjacent_x = our_position[0] + adjacent_square.dx
+				adjacent_y = our_position[1] + adjacent_square.dy
+
+				if map_list[adjacent_x][adjacent_y] in WALKABLE:
+					adjacency_accumulator += 1
+		
+		if adjacency_accumulator == 4:
+			print("Conditions Met: Open Space Bombing")
+			return True
+		else:
+			return False
+		
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+		
+		valid_moves = []
+		our_position = bombers[player_index]['position']
+		
+		for possible_move in Directions.values():
+			if (possible_move.name != 'still'):
+				valid_moves.append(possible_move)
+		
+		print("Action: Open Space Bombing")
+		if len(valid_moves) > 0:
+			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
+				
 		
 class Random_Move_Behaviour(object):
 	
@@ -87,7 +126,7 @@ class Random_Move_Behaviour(object):
 		self.priority = priority
 		pass
 		
-	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		print("Check: Random Move")
 
 		if True:
@@ -96,7 +135,7 @@ class Random_Move_Behaviour(object):
 		else:
 			return False
 		
-	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		
 		valid_moves = []
 		our_position = bombers[player_index]['position']
@@ -122,6 +161,6 @@ class Do_Nothing_Behaviour(object):
 	def __init__(self):
 		self.priority = 0.0
 		
-	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		print("Action: Doing Nothing")
 		return Directions['still'].action	
