@@ -34,7 +34,7 @@ class DangerMap:
 		for square in explosion_list:
 			danger_map[square[0]][square[1]] = 1
 
-		self.print_map(danger_map)
+		#self.print_map(danger_map)
 
 		return danger_map 
 
