@@ -36,9 +36,16 @@ class PathPlanner:
 			if ((goal == 'FIREUP' or 'BOMBUP' or 'POWERUP') and (map_list[square[0]][square[1]] == goal)) or \
 			   ((goal == 'BLOCK') and (self.check_adjacency(map_list, square, goal))):
 				new_dist = len(self.A_star(accessibility, curr_pos, square))
-				options[new_dist] = square
-					
+				options[new_dist] = square	
 		return options
+
+	def query_accessible_safezone(self, map_list, accessibility, curr_pos, danger_map):
+		options = {}
+		# if we're searching for a walkable square, just iterate over accessible squares		
+		for square in accessibility:
+			if danger_map[square[0]][square[1]] == 0: return True
+
+		return False
 
 	def check_adjacency(self, map_list, from_xy, goal):
 		for move in Directions.values():
