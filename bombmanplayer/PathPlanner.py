@@ -35,7 +35,8 @@ class PathPlanner:
 		for square in accessibility:
 			if ((goal == 'FIREUP' or 'BOMBUP' or 'POWERUP') and (map_list[square[0]][square[1]] == goal)) or \
 			   ((goal == 'BLOCK') and (self.check_adjacency(map_list, square, goal))):
-					options[self.manhattan_distance(curr_pos, square)] = square
+				new_dist = len(self.A_star(accessibility, curr_pos, square))
+				options[new_dist] = square
 					
 		return options
 
@@ -65,8 +66,6 @@ class PathPlanner:
 		f_score = {}
 
 		g_score[start] = 0
-		print "A* 1: " + str(start)
-		print "A* 2: " + str(goal)
 		f_score[start] = g_score[start] + self.manhattan_distance(start, goal)
 	
 		while len(openset) > 0:
