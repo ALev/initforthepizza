@@ -17,7 +17,7 @@ class Avoid_Death_Behaviour(object):
 		for possible_move in Directions.values():
 			possible_x = our_position[0] + possible_move.dx
 			possible_y = our_position[1] + possible_move.dy
-			if danger_map[possible_x][possible_y] > 0.8:
+			if danger_map[possible_x][possible_y] > 0.7:
 				print("Conditions Met: Avoid Death")
 				return True
 
@@ -31,7 +31,7 @@ class Avoid_Death_Behaviour(object):
 			possible_x = our_position[0] + possible_move.dx
 			possible_y = our_position[1] + possible_move.dy
 			
-			if (danger_map[possible_x][possible_y] < 0.8) and (map_list[possible_x][possible_y] in WALKABLE):
+			if (danger_map[possible_x][possible_y] < 0.7) and (map_list[possible_x][possible_y] in WALKABLE):
 				return possible_move.action
 		
 		
@@ -43,14 +43,30 @@ class Bomb_A_Block_Behaviour(object):
 		
 	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		# print("Check: Bomb A Block")
-
+		
+		our_position = bombers[player_index]['position']
+		current_ambient_danger_level = 0
+		ambient_danger_threshold = 0.1 #This regulates how trigger happy and dense block bombs will be
+		
+		for i in range(-5,6):
+			square_x = our_position[0] + i
+			square_y = our_position[1] + i
+			if (0 <= square_x <= 16) and (0 <= square_y <= 16):
+				print(danger_map[square_x][square_y])
+				current_ambient_danger_level += danger_map[square_x][square_y]
+		
+		print("Ambient danger:")
+		print(current_ambient_danger_level)
+		print("Less than threshold?")
+		print(current_ambient_danger_level < ambient_danger_threshold)
+		
 		path_planner = PathPlanner()
-		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK'):
-			if (move_number < 40) and (len(bombs) == 0):
-				print("Conditions Met: Bomb A Block")
-				return True
-			elif (move_number > 40):
-				print("Conditions Met: Bomb A Block")
+		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK') & (current_ambient_danger_level < ambient_danger_threshold):
+			# if (move_number < 40) and (len(bombs) == 0):
+			# 	print("Conditions Met: Bomb A Block")
+			# 	return True
+			# elif (move_number > 40):
+			# 	print("Conditions Met: Bomb A Block")
 				return True
 		return False
 			
@@ -146,23 +162,30 @@ class Random_Move_Behaviour(object):
 		
 	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
 		
-		valid_moves = []
+		print("Action: Random Move")
+		
+		best_moves = []
 		our_position = bombers[player_index]['position']
+		lowest_danger_value = 1
 		
 		for possible_move in Directions.values():
-			if (possible_move.name != 'still'):
-				possible_x = our_position[0] + possible_move.dx
-				possible_y = our_position[1] + possible_move.dy
-
-				if map_list[possible_x][possible_y] in WALKABLE:
-					valid_moves.append(possible_move)
+			destination_x = our_position[0] + possible_move.dx
+			destination_y = our_position[1] + possible_move.dy
+			if map_list[destination_x][destination_y] in WALKABLE:
+				if danger_map[destination_x][destination_y] < lowest_danger_value:
+					best_moves = []
+					best_moves.append(possible_move)
+					lowest_danger_value = danger_map[destination_x][destination_y]
+				elif danger_map[destination_x][destination_y] == lowest_danger_value:
+					best_moves.append(possible_move)
+			
+		if len(best_moves) > 1:
+			for move in best_moves:
+				if move.name == 'still':
+					best_moves.remove(move)
 		
-		print("Action: Random Move")
-		if len(valid_moves) > 0:
-			return valid_moves[random.randrange(0, len(valid_moves))].action
-		
-		# return Directions.values()[random.randrange(0, len(Directions))].action
-		# return Directions['up'].action
+		if len(best_moves) > 0:
+			return best_moves[random.randrange(0, len(best_moves))].action
 		
 
 class Do_Nothing_Behaviour(object):
