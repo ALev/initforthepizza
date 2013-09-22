@@ -7,7 +7,7 @@ class DangerMap:
 	def __init__(self):
 		pass
 
-	def convert_to_danger_map(self, map_list, bombs):
+	def convert_to_danger_map(self, map_list, bombs, explosion_list):
 		
 		x_max = len(map_list)
 		y_max = len(map_list[0])
@@ -33,6 +33,9 @@ class DangerMap:
 			time_to_explode = min([bombs[bomb_xy]['time_left'] for bomb_xy in bomb_cluster])
 			for square in square_cluster:
 				danger_map[square[0]][square[1]] = self.danger_function(time_to_explode)
+
+		for square in explosion_list:
+			danger_map[square[0]][square[1]] = 1
 
 		self.print_map(danger_map)
 

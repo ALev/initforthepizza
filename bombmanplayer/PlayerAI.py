@@ -26,7 +26,7 @@ class Decider(object):
 		self.action_to_take_next = Do_Nothing_Behaviour()
 		
 		"""Set up the DangerMap!"""
-		danger_map = self.map_converter.convert_to_danger_map(map_list, bombs)
+		danger_map = self.map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
 
 		print("******Decision Time!******")
 		for behaviour in self.behaviours:
