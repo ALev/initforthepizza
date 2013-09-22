@@ -52,13 +52,13 @@ class Bomb_A_Block_Behaviour(object):
 			square_x = our_position[0] + i
 			square_y = our_position[1] + i
 			if (0 <= square_x <= 16) and (0 <= square_y <= 16):
-				print(danger_map[square_x][square_y])
+				# print(danger_map[square_x][square_y])
 				current_ambient_danger_level += danger_map[square_x][square_y]
 		
-		print("Ambient danger:")
-		print(current_ambient_danger_level)
-		print("Less than threshold?")
-		print(current_ambient_danger_level < ambient_danger_threshold)
+		# print("Ambient danger:")
+		# print(current_ambient_danger_level)
+		# print("Less than threshold?")
+		# print(current_ambient_danger_level < ambient_danger_threshold)
 		
 		path_planner = PathPlanner()
 		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK') & (current_ambient_danger_level < ambient_danger_threshold):
