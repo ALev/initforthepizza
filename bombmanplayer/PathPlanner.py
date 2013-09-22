@@ -34,8 +34,8 @@ class PathPlanner:
 		# if we're searching for a walkable square, just iterate over accessible squares		
 		for square in accessibility:
 			if ((goal == 'FIREUP' or 'BOMBUP' or 'POWERUP') and (map_list[square[0]][square[1]] == goal)) or \
-			   ((goal == 'BLOCK') and (check_adjacency(map_list, square, goal))):
-					options[manhattan_distance(curr_pos, square)] = square
+			   ((goal == 'BLOCK') and (self.check_adjacency(map_list, square, goal))):
+					options[self.manhattan_distance(curr_pos, square)] = square
 					
 		return options
 
@@ -48,7 +48,7 @@ class PathPlanner:
 				return True
 		return False
 
-	def manhattan_distance(start, end):
+	def manhattan_distance(self,start, end):
 		return (abs(start[0]-end[0])+abs(start[1]-end[1]))
 
 	def is_opponent_accessible(self, map_list, bombers):
@@ -65,7 +65,9 @@ class PathPlanner:
 		f_score = {}
 
 		g_score[start] = 0
-		f_score[start] = g_score[start] + manhattan_distance(start, goal)
+		print "A* 1: " + str(start)
+		print "A* 2: " + str(goal)
+		f_score[start] = g_score[start] + self.manhattan_distance(start, goal)
 	
 		while len(openset) > 0:
 			f_score_subset = {k: f_score[k] for k in openset}
@@ -89,13 +91,13 @@ class PathPlanner:
 					if (neighbor not in g_score) or tent_g_score < g_score[neighbor]:
 						came_from[neighbor] = current
 						g_score[neighbor] = tent_g_score
-						f_score[neighbor] = g_score[neighbor] + manhattan_distance(neighbor, goal)
+						f_score[neighbor] = g_score[neighbor] + self.manhattan_distance(neighbor, goal)
 						if neighbor not in openset: openset.append(neighbor)
 		return []
 
 	def reconstruct_path(self, came_from, current_node):
 		if current_node in came_from:
-			path = reconstruct_path(came_from, came_from[current_node])
+			path = self.reconstruct_path(came_from, came_from[current_node])
 			path.append(current_node)
 			return path
 		else: 
