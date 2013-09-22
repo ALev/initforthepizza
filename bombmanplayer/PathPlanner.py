@@ -40,16 +40,14 @@ class PathPlanner:
 		return options
 
 	def query_accessible_safezone(self, map_list, accessibility, curr_pos, danger_map):
-		options = {}
-		
-		print("Current Position:"+str(curr_pos))
+		print("Safezone search from {0}".format(curr_pos))
 		# if we're searching for a walkable square, just iterate over accessible squares		
 		for square in accessibility:
 			print(
-				"For Square:"+str(square[0])+
+				"For Square: ["+str(square[0])+
 				","+
 				str(square[1])+
-				"Danger Value Is:"+
+				"] Danger Value Is: "+
 				str(danger_map[square[0]][square[1]])
 				)
 			if danger_map[square[0]][square[1]] == 0: return True
@@ -59,6 +57,9 @@ class PathPlanner:
 	def query_safe_bomb_drop(self, map_list, bombs, bombers, explosion_list, new_move, player_index):
 		# add bomb to current location	
 		cur_loc = bombers[player_index]['position']	
+		print("Original position {0}".format(cur_loc))
+		print("Move considered {0}".format(new_move.name))
+
 		new_bomb = {'owner': player_index, 'range': bombers[player_index]['bomb_range'], 'time_left':14}
 		bombs[cur_loc] = new_bomb
 		# modify map_list to reflect changes
@@ -69,6 +70,7 @@ class PathPlanner:
 		new_y = bombers[player_index]['position'][1] + new_move.dy
 		new_pos = (new_x, new_y)
 		bombers[player_index]['position'] = new_pos
+		print("Destination position {0}".format(bombers[player_index]['position'])
 
 		map_converter = DangerMap()
 		new_danger_map = map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
