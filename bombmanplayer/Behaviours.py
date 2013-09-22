@@ -62,11 +62,14 @@ class Bomb_A_Block_Behaviour(object):
 		
 		path_planner = PathPlanner()
 		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK') & (current_ambient_danger_level < ambient_danger_threshold):
-
+			
 			self.moves_we_could_take = []
-			for possible_move in Directions.values()
-				if (path_planner.query_safe_bomb_drop(map_list, bombs, bombers, explosion_list, possible_move, player_index) == True):
-					self.moves_we_could_take.append(possible_move)
+			for possible_move in Directions.values():
+				possible_x = our_position[0] + possible_move.dx
+				possible_y = our_position[1] + possible_move.dy
+				if map_list[possible_x][possible_y] in WALKABLE:
+					if (path_planner.query_safe_bomb_drop(map_list, bombs, bombers, explosion_list, possible_move, player_index) == True):
+						self.moves_we_could_take.append(possible_move)
 					
 			if len(self.moves_we_could_take) > 0:
 					return True
