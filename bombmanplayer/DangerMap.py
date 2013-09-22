@@ -1,6 +1,7 @@
 #DangerMap.py - convert the map_list to a map of danger values in [0,1]
 from Enums import *
 from Direction import *
+from globalvars import *
 
 class DangerMap:
 
@@ -8,11 +9,7 @@ class DangerMap:
 		pass
 
 	def convert_to_danger_map(self, map_list, bombs, explosion_list):
-		
-		x_max = len(map_list)
-		y_max = len(map_list[0])
-
-		danger_map = [[0 for y in range(0,y_max)] for x in range(0,x_max)]
+		danger_map = [[0 for y in range(0,MAP_SIZE)] for x in range(0,MAP_SIZE)]
 	
 		bomb_clusters = []
 		square_clusters = []
@@ -25,7 +22,7 @@ class DangerMap:
 					break
 			if skip_bomb: pass
 			
-			new_bomb_clus, new_square_clus = self.query_bomb_cluster(map_list, bombs, [], [], bomb_xy, x_max, y_max)
+			new_bomb_clus, new_square_clus = self.query_bomb_cluster(map_list, bombs, [], [], bomb_xy)
 			bomb_clusters.append(new_bomb_clus)
 			square_clusters.append(new_square_clus)
 
@@ -44,7 +41,7 @@ class DangerMap:
 	def danger_function(self,time_left):
 		return 1 - time_left/15.0
 			
-	def query_bomb_cluster(self,map_list, bombs, bomb_cluster, square_cluster, bomb_xy, x_max, y_max):
+	def query_bomb_cluster(self,map_list, bombs, bomb_cluster, square_cluster, bomb_xy):
 		bomb_cluster.append(bomb_xy)
 		square_cluster.append(bomb_xy)
 
@@ -53,10 +50,10 @@ class DangerMap:
 		for move in Directions.values():
 			if move.name == 'still': pass
 			for range_inc in range(1,bomb_range+1):
-				x = min(max(bomb_xy[0] + move.dx * range_inc,0),x_max)
-				y = min(max(bomb_xy[1] + move.dy * range_inc,0),y_max)
+				x = min(max(bomb_xy[0] + move.dx * range_inc,0),MAP_SIZE)
+				y = min(max(bomb_xy[1] + move.dy * range_inc,0),MAP_SIZE)
 				if (map_list[x][y] == Enums.MapItems.BOMB) and ((x,y) not in bomb_cluster):
-					recurs_bombs, recurs_squares = self.query_bomb_cluster(map_list, bombs, bomb_cluster, square_cluster, (x,y), x_max, y_max)
+					recurs_bombs, recurs_squares = self.query_bomb_cluster(map_list, bombs, bomb_cluster, square_cluster, (x,y))
 					square_cluster.extend(recurs_squares)
 					bomb_cluster.extend(recurs_bombs)
 					break  #explosions won't go past 
@@ -70,12 +67,9 @@ class DangerMap:
 
 	def print_map(self, danger_map):
 		# ok fuck. because we get the format in map[col][row], we have to transpose the whole thing in order to print.
-		x_max = len(danger_map)
-		y_max = len(danger_map[0])
-
-		new_danger_map = [[0 for x in range(0,x_max)] for y in range(0,y_max)]
-		for x in range(0,x_max):
-			for y in range(0,y_max):
+		new_danger_map = [[0 for x in range(0,MAP_SIZE)] for y in range(0,MAP_SIZE)]
+		for x in range(0,MAP_SIZE):
+			for y in range(0,MAP_SIZE):
 				new_danger_map[x][y] = danger_map[y][x]
 
 		output_str = ""
