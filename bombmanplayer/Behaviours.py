@@ -1,6 +1,7 @@
 import random
 from Enums import *
 from Direction import *
+from PathPlanner import *
 
 """Behaviours are combinations of conditions which trigger the behaviour and actions to take"""
 class Avoid_Death_Behaviour(object):
@@ -45,21 +46,15 @@ class Bomb_A_Block_Behaviour(object):
 		
 	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
 		print("Check: Bomb A Block")
-		our_position = bombers[player_index]['position']
 
-		for adjacent_square in Directions.values():
-			if (adjacent_square.name != 'still'):
-				adjacent_square_x = our_position[0] + adjacent_square.dx
-				adjacent_square_y = our_position[1] + adjacent_square.dy
-
-				if (map_list[adjacent_square_x][adjacent_square_y] == "BLOCK"):
-											
-						if (move_number < 40) and (len(bombs) == 0):
-							print("Conditions Met: Bomb A Block")
-							return True
-						elif (move_number > 40):
-							print("Conditions Met: Bomb A Block")
-							return True
+		path_planner = PathPlanner()
+		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK'):
+			if (move_number < 40) and (len(bombs) == 0):
+				print("Conditions Met: Bomb A Block")
+				return True
+			elif (move_number > 40):
+				print("Conditions Met: Bomb A Block")
+				return True
 		return False
 			
 	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
