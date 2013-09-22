@@ -42,26 +42,11 @@ class Bomb_A_Block_Behaviour(object):
 		self.priority = priority
 		
 	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
-		# print("Check: Bomb A Block")
-		
+	
 		our_position = bombers[player_index]['position']
-		current_ambient_danger_level = 0
-		ambient_danger_threshold = 0.1 #This regulates how trigger happy and dense block bombs will be
-		
-		for i in range(-5,6):
-			square_x = our_position[0] + i
-			square_y = our_position[1] + i
-			if (0 <= square_x <= 16) and (0 <= square_y <= 16):
-				print(danger_map[square_x][square_y])
-				current_ambient_danger_level += danger_map[square_x][square_y]
-		
-		print("Ambient danger:")
-		print(current_ambient_danger_level)
-		print("Less than threshold?")
-		print(current_ambient_danger_level < ambient_danger_threshold)
 		
 		path_planner = PathPlanner()
-		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK') & (current_ambient_danger_level < ambient_danger_threshold):
+		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK'):
 			
 			self.moves_we_could_take = []
 			for possible_move in Directions.values():
@@ -81,27 +66,6 @@ class Bomb_A_Block_Behaviour(object):
 
 		if len(self.moves_we_could_take) > 0:
 			return self.moves_we_could_take[random.randrange(0, len(self.moves_we_could_take))].bombaction
-		
-		valid_moves = []
-		our_position = bombers[player_index]['position']
-		
-		for possible_move in Directions.values():
-			if (possible_move.name != 'still'):
-				possible_x = our_position[0] + possible_move.dx
-				possible_y = our_position[1] + possible_move.dy
-
-				if map_list[possible_x][possible_y] in WALKABLE:
-					adjacency_accumulator = 0 
-					for adjacent_square in Directions.values():
-						adjacent_square_x = possible_x + adjacent_square.dx
-						adjacent_square_y = possible_y + adjacent_square.dy
-						if map_list[adjacent_square_x][adjacent_square_y] not in WALKABLE:
-							adjacency_accumulator += 1
-					if adjacency_accumulator < 3:	
-						valid_moves.append(possible_move)
-		
-		if len(valid_moves) > 0:
-			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
 
 
 class Open_Space_Bombing_Behaviour(object):
@@ -125,34 +89,24 @@ class Open_Space_Bombing_Behaviour(object):
 					adjacency_accumulator += 1
 		
 		if adjacency_accumulator == 4 and self.path_planner.is_opponent_accessible(map_list, bombers):
-			print("Conditions Met: Open Space Bombing")
-			return True
+			
+			self.moves_we_could_take = []
+			for possible_move in Directions.values():
+				possible_x = our_position[0] + possible_move.dx
+				possible_y = our_position[1] + possible_move.dy
+				if (self.path_planner.query_safe_bomb_drop(map_list, bombs, bombers, explosion_list, possible_move, player_index) == True):
+					self.moves_we_could_take.append(possible_move)
+				if len(self.moves_we_could_take) > 0:
+					print("Conditions Met: Open Space Bombing")
+					return True
 		else:
 			return False
 		
-	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
-		
-		valid_moves = []
-		our_position = bombers[player_index]['position']
-
-		
-		for possible_move in Directions.values():
-			adjacency_accumulator = 0
-			if (possible_move.name != 'still'):
-				possible_x = our_position[0] + possible_move.dx
-				possible_y = our_position[1] + possible_move.dy
-				
-				for adjacent_square in Directions.values():
-					adjacent_square_x = possible_x + adjacent_square.dx
-					adjacent_square_y = possible_y + adjacent_square.dy
-					if map_list[adjacent_square_x][adjacent_square_y] not in WALKABLE:
-						adjacency_accumulator += 1
-				if adjacency_accumulator < 3:	
-					valid_moves.append(possible_move)
+	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):		
 		
 		print("Action: Open Space Bombing")
-		if len(valid_moves) > 0:
-			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
+		if len(self.moves_we_could_take) > 0:
+			return self.moves_we_could_take[random.randrange(0, len(self.moves_we_could_take))].bombaction
 				
 		
 class Seek_Powerup_Behaviour(object):
