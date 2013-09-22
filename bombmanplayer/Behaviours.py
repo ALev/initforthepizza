@@ -46,23 +46,14 @@ class Bomb_A_Block_Behaviour(object):
 	def check_conditions(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map):
 		print("Check: Bomb A Block")
 		our_position = bombers[player_index]['position']
-		adjacency_accumulator_for_possible_move = 0
 
-		for possible_move in Directions.values():
-			if (possible_move.name != 'still'):
-				possible_x = our_position[0] + possible_move.dx
-				possible_y = our_position[1] + possible_move.dy
+		for adjacent_square in Directions.values():
+			if (adjacent_square.name != 'still'):
+				adjacent_square_x = our_position[0] + adjacent_square.dx
+				adjacent_square_y = our_position[1] + adjacent_square.dy
 
-				if (map_list[possible_x][possible_y] == "BLOCK"):
-
-					for adjacency in Directions.values():
-						ajacency_x = possible_x + adjacency.dx
-						ajacency_x = possible_x + adjacency.dy
-
-						if (map_list[adjacency_x][adjacency_y] in WALKABLE) == False:
-							adjacency_accumulator_for_possible_move += 1
-						
-					if adjacency_accumulator_for_possible_move < 3: 					
+				if (map_list[adjacent_square_x][adjacent_square_y] == "BLOCK"):
+											
 						if (move_number < 40) and (len(bombs) == 0):
 							print("Conditions Met: Bomb A Block")
 							return True
@@ -81,7 +72,14 @@ class Bomb_A_Block_Behaviour(object):
 				possible_y = our_position[1] + possible_move.dy
 
 				if map_list[possible_x][possible_y] in WALKABLE:
-					valid_moves.append(possible_move)
+					adjacency_accumulator = 0 
+					for adjacent_square in Directions.values():
+						adjacent_square_x = possible_x + adjacent_square.dx
+						adjacent_square_y = possible_y + adjacent_square.dy
+						if map_list[adjacent_square_x][adjacent_square_y] not in WALKABLE:
+							adjacency_accumulator += 1
+					if adjacency_accumulator < 3:	
+						valid_moves.append(possible_move)
 		
 		print("Action: Bomb A Block")
 		if len(valid_moves) > 0:

@@ -39,7 +39,10 @@ class Decider(object):
 				self.action_to_take_next = behaviour
 
 		print("******Action Time!******")
-		return self.action_to_take_next.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map)
+		self.move = self.action_to_take_next.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map)
+		if self.move == None:
+			self.move = self.random_move.take_action(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map)
+		return self.move
 
 
 class PlayerAI():
@@ -54,5 +57,4 @@ class PlayerAI():
 	def get_move(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
 		
 		move = self.decider.decide(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number)		
-		print(move)
 		return move
