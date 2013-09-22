@@ -47,4 +47,7 @@ class PlayerAI():
 		self.blocks = blocks_list[:]
 
 	def get_move(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
-		return self.decider.decide(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number)		
+		
+		move = self.decider.decide(map_list, bombs, powerups, bombers, explosion_list, player_index, move_number)		
+		print(move)
+		return move
