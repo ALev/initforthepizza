@@ -7,6 +7,7 @@ from Direction import *
 
 from Behaviours import *
 from DangerMap import *
+from PathPlanner import *
 
 """The Decider chooses which behaviour to do next"""		
 class Decider(object):
@@ -19,6 +20,7 @@ class Decider(object):
 		self.random_move = Random_Move_Behaviour(0.5)
 		self.behaviours = [self.avoid_death, self.bomb_a_block, self.random_move]
 		self.map_converter = DangerMap()
+		self.path_planner = PathPlanner()
 		
 	def decide(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number):
 		
@@ -27,6 +29,9 @@ class Decider(object):
 		
 		"""Set up the DangerMap!"""
 		danger_map = self.map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
+
+		"""Check accessible squares"""
+		accessible_squares = self.path_planner.query_accessible_squares(map_list, bombers, player_index)
 
 		print("******Decision Time!******")
 		for behaviour in self.behaviours:
