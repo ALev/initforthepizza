@@ -3,3 +3,6 @@ First:
 
 Second:
 python runclient.py localhost 19999 player
+
+AI vs AI:
+./runserver.sh --p1AI --p2AI
