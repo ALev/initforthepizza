@@ -4,3 +4,5 @@
 logs/AI-player.log
 
 logs/Human1.player.log
+
+*.pyc

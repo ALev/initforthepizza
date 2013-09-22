@@ -10,4 +10,14 @@
       <value>0</value>
     </score>
   </match>
+  <match>
+    <score>
+      <playername>player</playername>
+      <value>10</value>
+    </score>
+    <score>
+      <playername>Human1</playername>
+      <value>0</value>
+    </score>
+  </match>
 </matches>
