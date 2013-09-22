@@ -11,10 +11,8 @@ class PathPlanner:
 
 	def query_accessible_squares(self, map_list, bombers, player_index):
 		my_pos = bombers[player_index]['position']
-
+		
 		accessible_squares = self.query_accessibility(map_list, [], my_pos)
-
-		#print accessible_squares
 
 		return accessible_squares 
 			
@@ -25,12 +23,6 @@ class PathPlanner:
 			if move.name == 'still': pass
 			x = min(max(curr_pos[0] + move.dx,0),MAP_SIZE)
 			y = min(max(curr_pos[1] + move.dy,0),MAP_SIZE)
-			
-			print(x)
-			print(y)
-			print (accessible_squares)
-			for square in accessible_squares:
-				print(map_list[square[0]][square[1]])
 			
 			if (map_list[x][y] in WALKABLE) and ((x,y) not in accessible_squares):
 				recurs_squares = self.query_accessibility(map_list, accessible_squares, (x,y))
@@ -49,8 +41,17 @@ class PathPlanner:
 
 	def query_accessible_safezone(self, map_list, accessibility, curr_pos, danger_map):
 		options = {}
+		
+		print("Current Position:"+str(curr_pos))
 		# if we're searching for a walkable square, just iterate over accessible squares		
 		for square in accessibility:
+			print(
+				"For Square:"+str(square[0])+
+				","+
+				str(square[1])+
+				"Danger Value Is:"+
+				str(danger_map[square[0]][square[1]])
+				)
 			if danger_map[square[0]][square[1]] == 0: return True
 
 		return False
