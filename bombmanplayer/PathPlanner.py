@@ -3,6 +3,7 @@ from Enums import *
 from Direction import *
 from globalvars import *
 from DangerMap import *
+from copy import deepcopy
 
 class PathPlanner:
 	
@@ -43,28 +44,22 @@ class PathPlanner:
 		print("Safezone search from {0}".format(curr_pos))
 		# if we're searching for a walkable square, just iterate over accessible squares		
 		for square in accessibility:
-			print(
-				"For Square: ["+str(square[0])+
-				","+
-				str(square[1])+
-				"] Danger Value Is: "+
-				str(danger_map[square[0]][square[1]])
-				)
+			#print("For Square: ["+str(square[0])+","+str(square[1])+"] Danger Value Is: "+str(danger_map[square[0]][square[1]]))
 			if danger_map[square[0]][square[1]] == 0: return True
 
 		return False
 
 	def query_safe_bomb_drop(self, map_list, bombs, bombers, explosion_list, new_move, player_index):
 		# don't overwrite shit!!!
-		new_map_list = map_list
-		new_bombs = bombs
-		new_bombers = bombers
+		new_map_list = deepcopy(map_list)
+		new_bombs = deepcopy(bombs)
+		new_bombers = deepcopy(bombers)
 
 		# add bomb to current location	
 		
 		cur_loc = bombers[player_index]['position']	
 		print("Original position {0}".format(cur_loc))
-		print("Move considered {0}".format(new_move.name))
+		#print("Move considered {0}".format(new_move.name))
 
 		new_bomb = {'owner': player_index, 'range': bombers[player_index]['bomb_range'], 'time_left':14}
 		new_bombs[cur_loc] = new_bomb
@@ -76,14 +71,17 @@ class PathPlanner:
 		new_y = bombers[player_index]['position'][1] + new_move.dy
 		new_pos = (new_x, new_y)
 		new_bombers[player_index]['position'] = new_pos
-		print("Destination position {0}".format(new_bombers[player_index]['position']))
+		#print("Destination position {0}".format(new_bombers[player_index]['position']))
 
 		map_converter = DangerMap()
 		new_danger_map = map_converter.convert_to_danger_map(new_map_list, new_bombs, explosion_list)
 		new_accessibility = self.query_accessible_squares(new_map_list, new_bombers, player_index)
 
-		if self.query_accessible_safezone(map_list, new_accessibility, new_pos, new_danger_map): return True
-		return False
+		if self.query_accessible_safezone(map_list, new_accessibility, new_pos, new_danger_map):
+			#print("Move from {0} to {1} all good".format(bombers[player_index]['position'],new_bombers[player_index]['position']))
+			return True
+		else:
+			return False
 		
 
 	def check_adjacency(self, map_list, from_xy, goal):
