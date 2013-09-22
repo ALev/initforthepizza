@@ -56,3 +56,47 @@ class PathPlanner:
 		for square in accessible_squares:
 			if (square[0],square[1]) == bombers[1]['position']: return True
 		return False
+
+	def A_star(self,accessibility, start, goal):
+		closedset = []
+		openset = [start]
+		came_from = {}
+		g_score = {}
+		f_score = {}
+
+		g_score[start] = 0
+		f_score[start] = g_score[start] + manhattan_distance(start, goal)
+	
+		while len(openset) > 0:
+			f_score_subset = {k: f_score[k] for k in openset}
+			current = min(f_score_subset, key=f_score_subset.get)
+			if current == goal:
+				return self.reconstruct_path(came_from, goal)
+		
+			openset.remove(current)
+			closedset.append(current)
+		
+			for move in Directions.values():
+				if move.name == 'still': pass
+				x = min(max(current[0] + move.dx,0),17)
+				y = min(max(current[1] + move.dy,0),17)
+				neighbor = (x,y)
+			
+				if neighbor in accessibility:
+					tent_g_score = g_score[current] + 1
+					if neighbor in closedset and (tent_g_score >= g_score[neighbor]): continue
+			
+					if (neighbor not in g_score) or tent_g_score < g_score[neighbor]:
+						came_from[neighbor] = current
+						g_score[neighbor] = tent_g_score
+						f_score[neighbor] = g_score[neighbor] + manhattan_distance(neighbor, goal)
+						if neighbor not in openset: openset.append(neighbor)
+		return []
+
+	def reconstruct_path(self, came_from, current_node):
+		if current_node in came_from:
+			path = reconstruct_path(came_from, came_from[current_node])
+			path.append(current_node)
+			return path
+		else: 
+			return [current_node]
