@@ -52,25 +52,33 @@ class Bomb_A_Block_Behaviour(object):
 			square_x = our_position[0] + i
 			square_y = our_position[1] + i
 			if (0 <= square_x <= 16) and (0 <= square_y <= 16):
-				# print(danger_map[square_x][square_y])
+				print(danger_map[square_x][square_y])
 				current_ambient_danger_level += danger_map[square_x][square_y]
 		
-		# print("Ambient danger:")
-		# print(current_ambient_danger_level)
-		# print("Less than threshold?")
-		# print(current_ambient_danger_level < ambient_danger_threshold)
+		print("Ambient danger:")
+		print(current_ambient_danger_level)
+		print("Less than threshold?")
+		print(current_ambient_danger_level < ambient_danger_threshold)
 		
 		path_planner = PathPlanner()
 		if path_planner.check_adjacency(map_list, bombers[player_index]['position'], 'BLOCK') & (current_ambient_danger_level < ambient_danger_threshold):
-			# if (move_number < 40) and (len(bombs) == 0):
-			# 	print("Conditions Met: Bomb A Block")
-			# 	return True
-			# elif (move_number > 40):
-			# 	print("Conditions Met: Bomb A Block")
-				return True
+
+			self.moves_we_could_take = []
+			for possible_move in Directions.values()
+				if (path_planner.query_safe_bomb_drop(map_list, bombs, bombers, explosion_list, possible_move, player_index) == True):
+					self.moves_we_could_take.append(possible_move)
+					
+			if len(self.moves_we_could_take) > 0:
+					return True
+
 		return False
 			
 	def take_action(self, map_list, bombs, powerups, bombers, explosion_list, player_index, move_number, danger_map, accessible_squares):
+		print("Action: Bomb A Block")
+
+		if len(self.moves_we_could_take) > 0:
+			return self.moves_we_could_take[random.randrange(0, len(self.moves_we_could_take))].bombaction
+		
 		valid_moves = []
 		our_position = bombers[player_index]['position']
 		
@@ -89,7 +97,6 @@ class Bomb_A_Block_Behaviour(object):
 					if adjacency_accumulator < 3:	
 						valid_moves.append(possible_move)
 		
-		print("Action: Bomb A Block")
 		if len(valid_moves) > 0:
 			return valid_moves[random.randrange(0, len(valid_moves))].bombaction
 
