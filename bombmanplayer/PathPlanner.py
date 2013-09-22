@@ -25,6 +25,13 @@ class PathPlanner:
 			if move.name == 'still': pass
 			x = min(max(curr_pos[0] + move.dx,0),MAP_SIZE)
 			y = min(max(curr_pos[1] + move.dy,0),MAP_SIZE)
+			
+			print(x)
+			print(y)
+			print (accessible_squares)
+			for square in accessible_squares:
+				print(map_list[square[0]][square[1]])
+			
 			if (map_list[x][y] in WALKABLE) and ((x,y) not in accessible_squares):
 				recurs_squares = self.query_accessibility(map_list, accessible_squares, (x,y))
 
@@ -51,14 +58,14 @@ class PathPlanner:
 	def query_safe_bomb_drop(self, map_list, bombs, bombers, explosion_list, new_move, player_index):
 		# add bomb to current location	
 		cur_loc = bombers[player_index]['position']	
-		new_bomb = {'owner': player_index, 'range': bombers[player_index]['bomb_range'], 'time_left':15}
+		new_bomb = {'owner': player_index, 'range': bombers[player_index]['bomb_range'], 'time_left':14}
 		bombs[cur_loc] = new_bomb
 		# modify map_list to reflect changes
 		map_list[cur_loc[0]][cur_loc[1]] = Enums.MapItems.BOMB
 
 		# update player position to new spot
 		new_x = bombers[player_index]['position'][0] + new_move.dx
-		new_y = bombers[player_index]['position'][0] + new_move.dy
+		new_y = bombers[player_index]['position'][1] + new_move.dy
 		new_pos = (new_x, new_y)
 		bombers[player_index]['position'] = new_pos
 
