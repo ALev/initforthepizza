@@ -55,26 +55,32 @@ class PathPlanner:
 		return False
 
 	def query_safe_bomb_drop(self, map_list, bombs, bombers, explosion_list, new_move, player_index):
+		# don't overwrite shit!!!
+		new_map_list = map_list
+		new_bombs = bombs
+		new_bombers = bombers
+
 		# add bomb to current location	
+		
 		cur_loc = bombers[player_index]['position']	
 		print("Original position {0}".format(cur_loc))
 		print("Move considered {0}".format(new_move.name))
 
 		new_bomb = {'owner': player_index, 'range': bombers[player_index]['bomb_range'], 'time_left':14}
-		bombs[cur_loc] = new_bomb
+		new_bombs[cur_loc] = new_bomb
 		# modify map_list to reflect changes
-		map_list[cur_loc[0]][cur_loc[1]] = Enums.MapItems.BOMB
+		new_map_list[cur_loc[0]][cur_loc[1]] = Enums.MapItems.BOMB
 
 		# update player position to new spot
 		new_x = bombers[player_index]['position'][0] + new_move.dx
 		new_y = bombers[player_index]['position'][1] + new_move.dy
 		new_pos = (new_x, new_y)
-		bombers[player_index]['position'] = new_pos
-		print("Destination position {0}".format(bombers[player_index]['position']))
+		new_bombers[player_index]['position'] = new_pos
+		print("Destination position {0}".format(new_bombers[player_index]['position']))
 
 		map_converter = DangerMap()
-		new_danger_map = map_converter.convert_to_danger_map(map_list, bombs, explosion_list)
-		new_accessibility = self.query_accessible_squares(map_list, bombers, player_index)
+		new_danger_map = map_converter.convert_to_danger_map(new_map_list, new_bombs, explosion_list)
+		new_accessibility = self.query_accessible_squares(new_map_list, new_bombers, player_index)
 
 		if self.query_accessible_safezone(map_list, new_accessibility, new_pos, new_danger_map): return True
 		return False
