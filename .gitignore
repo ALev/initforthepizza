@@ -12,3 +12,5 @@ logs/Human1.player.log
 *.pyc
 
 matchresult.xml
+
+logs/Classic.New.log.lck
