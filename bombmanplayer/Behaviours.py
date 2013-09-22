@@ -33,7 +33,7 @@ class Avoid_Death_Behaviour(object):
 			
 			if (danger_map[possible_x][possible_y] < 0.7) and (map_list[possible_x][possible_y] in WALKABLE):
 				if possible_move.name=="still":
-					print("Still move at {0}, danger value {1}:".format(([possible_x][possible_y]),danger_map[possible_x][possible_y]))
+					print("Still move at {0}, danger value {1}:".format((possible_x,possible_y),danger_map[possible_x][possible_y]))
 				return possible_move.action
 		
 		
